@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 0.12"
+}
+
 provider "aws" {
   skip_credentials_validation = true
   skip_metadata_api_check     = true
@@ -10,14 +14,6 @@ provider "aws" {
   region                      = "eu-west-1"
 }
 
-module "target_group" {
-  source = "../.."
-
-  name            = "test-service"
-  vpc_id          = "test-vpc"
-  task_definition = "test-taskdef"
-}
-
 module "service" {
   source = "../.."
 
@@ -26,38 +22,14 @@ module "service" {
   task_definition = "test-taskdef"
 }
 
+output "target_group_arn" {
+  value = module.service.target_group_arn
+}
+
 module "service_with_long_name" {
   source = "../.."
 
   name            = "test-service-humptydumptysatonawallhumptydumptyhadagreatfall"
   vpc_id          = "test-vpc"
   task_definition = "test-taskdef"
-}
-
-module "role" {
-  source = "../.."
-
-  name            = "test-service"
-  vpc_id          = "test-vpc"
-  task_definition = "test-taskdef"
-}
-
-module "policy" {
-  source = "../.."
-
-  name            = "test-service"
-  vpc_id          = "test-vpc"
-  task_definition = "test-taskdef"
-}
-
-module "all" {
-  source = "../.."
-
-  name            = "test-service"
-  vpc_id          = "test-vpc"
-  task_definition = "test-taskdef"
-}
-
-output "target_group_arn" {
-  value = "${module.service.target_group_arn}"
 }
